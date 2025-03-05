@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Burgundy Supplies</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #800020;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: visible;
+        }
+
+        .header-logo {
+            height: 170px;
+            width: 225px;
+            margin: -30px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cart-icon {
+            height: 70px;
+            width: 70px;
+            cursor: pointer;
+            margin: -15px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin: 0;
+            text-align: center;
+        }
+
+        .cart-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 100px 2fr 1fr 1fr 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-controls button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #800020;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .remove-btn {
+            color: #800020;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            text-align: right;
+        }
+
+        .checkout-btn {
+            background-color: #800020;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #a52a2a;
+        }
+
+        .empty-cart {
+            padding: 50px;
+            text-align: center;
+            color: #666;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            margin-top: auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Add these new media queries */
+        @media screen and (max-width: 768px) {
+            header {
+                justify-content: center;
+                padding: 5px;
+                position: relative;
+            }
+
+            header h1 {
+                display: none;
+            }
+
+            .cart-icon {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .header-logo {
+                margin: -20px 0;
+                height: 140px;
+                width: 185px;
+            }
+
+            /* Additional cart-specific responsive styles */
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .cart-item > * {
+                grid-column: span 2;
+            }
+
+            .cart-item img {
+                grid-column: 1;
+                grid-row: span 2;
+                width: 80px;
+                height: 80px;
+            }
+
+            .cart-item .item-details {
+                grid-column: 2;
+                text-align: left;
+            }
+
+            .quantity-controls {
+                justify-content: center;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .header-logo {
+                height: 120px;
+                width: 160px;
+            }
+
+            .cart-icon {
+                height: 50px;
+                width: 50px;
+            }
+
+            .cart-container {
+                margin: 10px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="logo.png" alt="Burgundy Supplies Logo" class="header-logo">
+        </a>
+        <h1>Shopping Cart</h1>
+        <a href="cart.html">
+            <img src="cart.png" alt="Shopping Cart" class="cart-icon">
+        </a>
+    </header>
+
+    <div class="cart-container">
+        <div id="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+
+        <div class="cart-summary">
+            <h3>Cart Summary</h3>
+            <p>Subtotal: <span id="subtotal">R0.00</span></p>
+            <p>Shipping: Free</p>
+            <p><strong>Total: <span id="total">R0.00</span></strong></p>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        function updateCart() {
+            const cartContainer = document.getElementById('cart-items');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <h2>Your cart is empty</h2>
+                        <p>Add some products to your cart and they will show up here</p>
+                        <a href="index.html" class="checkout-btn">Continue Shopping</a>
+                    </div>
+                `;
+                return;
+            }
+
+            cartContainer.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="item-details">
+                        <h3>${item.name}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <div class="price">R${item.price.toFixed(2)}</div>
+                    <div class="total">R${(item.price * item.quantity).toFixed(2)}</div>
+                    <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
+                </div>
+            `).join('');
+
+            updateTotals();
+        }
+
+        function updateQuantity(id, change) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity = Math.max(1, item.quantity + change);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            }
+        }
+
+        function removeItem(id) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+
+        function updateTotals() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            document.getElementById('subtotal').textContent = `R${subtotal.toFixed(2)}`;
+            document.getElementById('total').textContent = `R${subtotal.toFixed(2)}`;
+        }
+
+        // Initialize cart on page load
+        updateCart();
+    </script>
+
+    <footer>
+        <p>Contact us at <a href="mailto:Orders@burgundysuppliers.co.za">@burgundysupplies.com</a></p>
+        <p>&copy; 2025 Burgundy Supplies. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Burgundy Supplies - Premium Skincare</title>
+    <title>Burgundy Supplies</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,12 +13,65 @@
             padding: 0;
             text-align: center;
             background-color: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
         header {
             background-color: #800020;
             color: white;
-            padding: 20px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: visible;
         }
+
+        .header-logo {
+            height: 170px;
+            width: 225px;
+            margin: -30px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cart-icon {
+            height: 70px;
+            width: 70px;
+            cursor: pointer;
+            margin: -15px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin: 0;
+            text-align: center;
+        }
+
+        .announcement-bar {
+            background-color: #ffd700;
+            color: #800020;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        .announcement-wrapper {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-10%); }
+        }
+
         #product {
             padding: 20px;
             background: white;
@@ -25,14 +80,17 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         img {
             width: 100%;
             border-radius: 10px;
         }
+
         .price {
             font-size: 1.5em;
             color: #800020;
         }
+
         button {
             background-color: #800020;
             color: white;
@@ -42,27 +100,82 @@
             cursor: pointer;
             border-radius: 5px;
         }
+
         button:hover {
             background-color: #a52a2a;
         }
         
+        .content {
+            flex: 1;
+        }
+
         footer {
             background-color: #333;
             color: white;
-            padding: 1px;
-            margin-top: 0;
-            margin-bottom: 0;
+            padding: 10px;
+            margin-top: auto;
         }
 
-        
+        @media screen and (max-width: 768px) {
+            header {
+                justify-content: center;
+                padding: 5px;
+                position: relative;
+            }
+
+            header h1 {
+                display: none;
+            }
+
+            .cart-icon {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .header-logo {
+                margin: -20px 0;
+                height: 140px;
+                width: 185px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .header-logo {
+                height: 120px;
+                width: 160px;
+            }
+
+            .cart-icon {
+                height: 50px;
+                width: 50px;
+            }
+        }
+
     </style>
 </head>
+
 <body>
-    <header>
+     <header>
+        <a href="index.html">
+            <img src="logo.png" alt="Burgundy Supplies Logo" class="header-logo">
+        </a>
         <h1>Burgundy Supplies</h1>
-        <p>Glow Naturally with Our Premium Skincare</p>
+        <a href="cart.html">
+            <img src="cart.png" alt="Shopping Cart" class="cart-icon">
+        </a>
     </header>
     
+    <div class="announcement-bar">
+        <div class="announcement-wrapper">
+            <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+            <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+            <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+            <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+        </div>
+    </div>
+
     <section id="product">
         <img src="Mock.jpg" alt="Burgundy Supplies Skincare Product">
         <h2>Radiance Glow Serum</h2>
@@ -77,13 +190,37 @@
     </section>
     
     <footer>
-        <p>Contact us at <a href="mailto:support@burgundysupplies.com">support@burgundysupplies.com</a></p>
+        <p>Contact us at <a href="Orders@burgundysuppliers.co.za">@burgundysupplies.com</a></p>
         <p>&copy; 2025 Burgundy Supplies. All rights reserved.</p>
     </footer>
 
     <script>
         document.getElementById("buy-now").addEventListener("click", function() {
-            alert("Thank you for your interest! Online checkout is coming soon.");
+            // Create or get existing cart
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Check if product already exists in cart
+            const existingProduct = cart.find(item => item.id === 1);
+            
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                // Add new product to cart
+                cart.push({
+                    id: 1,
+                    name: "Radiance Glow Serum",
+                    description: "A lightweight, nourishing serum",
+                    price: 499.99,
+                    quantity: 1,
+                    image: "Mock.jpg"
+                });
+            }
+            
+            // Save cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Redirect to cart page
+            window.location.href = "cart.html";
         });
     </script>
 </body>
