@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burgundy Supplies - Premium Skincare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+        header {
+            background-color: #800020;
+            color: white;
+            padding: 20px;
+        }
+        #product {
+            padding: 20px;
+            background: white;
+            margin: 20px auto;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .price {
+            font-size: 1.5em;
+            color: #800020;
+        }
+        button {
+            background-color: #800020;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #a52a2a;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 1px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Burgundy Supplies</h1>
+        <p>Glow Naturally with Our Premium Skincare</p>
+    </header>
+    
+    <section id="product">
+        <img src="Mock.jpg" alt="Burgundy Supplies Skincare Product">
+        <h2>Radiance Glow Serum</h2>
+        <p>A lightweight, nourishing serum designed to hydrate, brighten, and rejuvenate your skin.</p>
+        <ul>
+            <li>Deep hydration & nourishment</li>
+            <li>Reduces fine lines & wrinkles</li>
+            <li>Enhances natural glow</li>
+        </ul>
+        <p class="price">R499.99</p>
+        <button id="buy-now">Buy Now</button>
+    </section>
+    
+    <footer>
+        <p>Contact us at <a href="mailto:support@burgundysupplies.com">support@burgundysupplies.com</a></p>
+        <p>&copy; 2025 Burgundy Supplies. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("buy-now").addEventListener("click", function() {
+            alert("Thank you for your interest! Online checkout is coming soon.");
+        });
+    </script>
+</body>
+</html>
