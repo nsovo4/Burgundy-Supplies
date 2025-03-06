@@ -63,7 +63,7 @@
 
         .cart-item {
             display: grid;
-            grid-template-columns: 100px 2fr 1fr 1fr 1fr auto;
+            grid-template-columns: 150px 2fr 1fr 1fr 1fr auto;
             gap: 20px;
             align-items: center;
             padding: 20px;
@@ -71,16 +71,17 @@
         }
 
         .cart-item img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 5px;
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 10px;
         }
 
         .quantity-controls {
             display: flex;
             align-items: center;
             gap: 10px;
+            justify-content: center;
         }
 
         .quantity-controls button {
@@ -91,6 +92,16 @@
             color: white;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-controls span {
+            font-size: 1.1em;
+            min-width: 30px;
+            text-align: center;
         }
 
         .remove-btn {
@@ -103,21 +114,48 @@
 
         .cart-summary {
             margin-top: 20px;
-            padding: 20px;
+            padding: 30px;
             background: #f9f9f9;
             border-radius: 5px;
-            text-align: right;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-summary-details {
+            margin: 20px 0;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .cart-summary h3 {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            color: #800020;
+            text-align: center;
+        }
+
+        .cart-summary p {
+            font-size: 1.1em;
+            margin: 10px 0;
+            text-align: center;
         }
 
         .checkout-btn {
             background-color: #800020;
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 15px 40px;
             font-size: 1.1em;
             border-radius: 5px;
             cursor: pointer;
             margin-top: 20px;
+            min-width: 200px;
+            width: 100%;
+            max-width: 300px;
         }
 
         .checkout-btn:hover {
@@ -169,29 +207,35 @@
 
             /* Additional cart-specific responsive styles */
             .cart-item {
-                grid-template-columns: 80px 1fr;
+                grid-template-columns: 100px 1fr;
                 gap: 10px;
-                padding: 15px;
+            }
+
+            .cart-item img {
+                width: 100px;
+                height: 100px;
+                margin-right: 10px;
             }
 
             .cart-item > * {
                 grid-column: span 2;
             }
 
-            .cart-item img {
-                grid-column: 1;
-                grid-row: span 2;
-                width: 80px;
-                height: 80px;
-            }
-
+            .cart-item img,
             .cart-item .item-details {
-                grid-column: 2;
-                text-align: left;
+                grid-column: span 1;
             }
 
             .quantity-controls {
                 justify-content: center;
+            }
+
+            .cart-summary {
+                padding: 20px;
+            }
+
+            .cart-summary-details {
+                margin: 15px 0;
             }
         }
 
@@ -231,9 +275,11 @@
 
         <div class="cart-summary">
             <h3>Cart Summary</h3>
-            <p>Subtotal: <span id="subtotal">R0.00</span></p>
-            <p>Shipping: Free</p>
-            <p><strong>Total: <span id="total">R0.00</span></strong></p>
+            <div class="cart-summary-details">
+                <p>Subtotal: <span id="subtotal">R0.00</span></p>
+                <p>Shipping: Free</p>
+                <p><strong>Total: <span id="total">R0.00</span></strong></p>
+            </div>
             <button class="checkout-btn">Proceed to Checkout</button>
         </div>
     </div>
@@ -241,33 +287,42 @@
     <script>
         function updateCart() {
             const cartContainer = document.getElementById('cart-items');
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cart = [];
             
-            if (cart.length === 0) {
+            try {
+                const cartData = localStorage.getItem('cart');
+                cart = cartData ? JSON.parse(cartData) : [];
+                console.log('Retrieved cart:', cart);
+            } catch (e) {
+                console.error('Error loading cart:', e);
+                cart = [];
+            }
+            
+            if (!cart || cart.length === 0) {
                 cartContainer.innerHTML = `
                     <div class="empty-cart">
                         <h2>Your cart is empty</h2>
-                        <p>Add some products to your cart and they will show up here</p>
+                        <p>Add some products to your cart and they will show up here</p><br><br>
                         <a href="index.html" class="checkout-btn">Continue Shopping</a>
                     </div>
                 `;
+                updateTotals();
                 return;
             }
 
             cartContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}">
+                    <img src="Mock.jpg" alt="${item.name}">
                     <div class="item-details">
                         <h3>${item.name}</h3>
-                        <p>${item.description}</p>
                     </div>
                     <div class="quantity-controls">
-                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <button onclick="updateQuantity(${item.id}, -1)">−</button>
                         <span>${item.quantity}</span>
                         <button onclick="updateQuantity(${item.id}, 1)">+</button>
                     </div>
-                    <div class="price">R${item.price.toFixed(2)}</div>
-                    <div class="total">R${(item.price * item.quantity).toFixed(2)}</div>
+                    <div class="price">R${Number(item.price).toFixed(2)}</div>
+                    <div class="total">R${(Number(item.price) * item.quantity).toFixed(2)}</div>
                     <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
                 </div>
             `).join('');
@@ -276,36 +331,76 @@
         }
 
         function updateQuantity(id, change) {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const item = cart.find(item => item.id === id);
-            if (item) {
-                item.quantity = Math.max(1, item.quantity + change);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCart();
+            try {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const itemIndex = cart.findIndex(item => item.id === id);
+                
+                if (itemIndex !== -1) {
+                    cart[itemIndex].quantity = Math.max(1, cart[itemIndex].quantity + change);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCart();
+                }
+            } catch (e) {
+                console.error('Error updating quantity:', e);
             }
         }
 
         function removeItem(id) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart = cart.filter(item => item.id !== id);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCart();
+            try {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart = cart.filter(item => item.id !== id);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            } catch (e) {
+                console.error('Error removing item:', e);
+            }
         }
 
         function updateTotals() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            document.getElementById('subtotal').textContent = `R${subtotal.toFixed(2)}`;
-            document.getElementById('total').textContent = `R${subtotal.toFixed(2)}`;
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let subtotal = 0;
+                
+                // Calculate subtotal by iterating through cart items
+                cart.forEach(item => {
+                    const price = parseFloat(item.price);
+                    const quantity = parseInt(item.quantity);
+                    if (!isNaN(price) && !isNaN(quantity)) {
+                        subtotal += price * quantity;
+                    }
+                });
+                
+                // Format the totals with 2 decimal places
+                const formattedSubtotal = subtotal.toFixed(2);
+                
+                // Update the display
+                document.getElementById('subtotal').textContent = `R${formattedSubtotal}`;
+                document.getElementById('total').textContent = `R${formattedSubtotal}`;
+                
+                console.log('Updated totals:', { subtotal: formattedSubtotal });
+            } catch (e) {
+                console.error('Error updating totals:', e);
+                // Set default values if there's an error
+                document.getElementById('subtotal').textContent = 'R0.00';
+                document.getElementById('total').textContent = 'R0.00';
+            }
         }
 
         // Initialize cart on page load
-        updateCart();
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCart();
+        });
+
+        // Update cart when storage changes
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'cart') {
+                updateCart();
+            }
+        });
     </script>
 
     <footer>
-        <p>Contact us at <a href="mailto:Orders@burgundysuppliers.co.za">@burgundysupplies.com</a></p>
+        <p>Contact us at <a href="mailto:Orders@burgundysuppliers.co.za">orders@burgundysupplies.com</a></p>
         <p>&copy; 2025 Burgundy Supplies. All rights reserved.</p>
     </footer>
 </body>

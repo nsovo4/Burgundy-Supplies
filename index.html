@@ -65,7 +65,7 @@
         .announcement-wrapper {
             display: inline-block;
             white-space: nowrap;
-            animation: marquee 30s linear infinite;
+            animation: marquee 50s linear infinite;
         }
         @keyframes marquee {
             0% { transform: translateX(0); }
@@ -79,6 +79,7 @@
             max-width: 400px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 1.1em;
         }
 
         img {
@@ -153,6 +154,84 @@
             }
         }
 
+        .ingredient-section {
+            padding: 40px;
+            background: white;
+            margin: 20px auto;
+            max-width: 1200px;
+            display: flex;
+            gap: 30px;
+            align-items: stretch;
+        }
+
+        .ingredient-image {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .ingredient-image img {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+
+        .ingredient-content {
+            flex: 1;
+            text-align: center;
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 500px;
+            max-width: 300px;
+        }
+
+        .ingredient-content h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #800020;
+        }
+
+        .ingredient-content p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .ingredient-section {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .ingredient-image, .ingredient-content {
+                flex: 0 1 calc(50% - 15px);
+                max-width: calc(50% - 15px);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .ingredient-section {
+                flex-direction: column;
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .ingredient-image, .ingredient-content {
+                max-width: 100%;
+                flex: 1 1 100%;
+            }
+
+            .ingredient-content {
+                min-height: auto;
+                padding: 20px;
+            }
+        }
+
     </style>
 </head>
 
@@ -176,51 +255,104 @@
         </div>
     </div>
 
+    <section class="ingredient-section">
+        <div class="ingredient-image">
+            <img src="wild yams.webp" alt="Natural ingredients display">
+        </div>
+        
+        <div class="ingredient-content">
+            <h2>Ingredients</h2>
+            <p>Wild Yam, Dioscorea villosa,
+                Chaste Berry(Agnus Castus),
+                Vitex agnus-castus, Red Clover,
+                Aloe Vera, Avocado Oil, Shea
+                Butter, Vitamin E Oil and Essential Oils</p><br>
+
+            <h2>Benefits</h2>
+            <p>Hormonal Balance </p>
+            <p>Menstrual Cycle Support </p>
+            <p>Skin Health </p>
+            <p>Anti-Inflammatory Properties </p>
+            <p>Muscle Relaxation </p>
+            <p>Libido and Sexual Health </p>
+        </div>
+
+        <div class="ingredient-image">
+            <img src="yam1.webp" alt="Natural ingredients preparation">
+        </div>
+
+        <div class="ingredient-content">
+            <h2>Directions for use</h2>
+            <p>For external use only.
+                As directed massage well
+                into chest, neck, breasts,
+                abdomen, inner arms & thighs .
+                these are the areas of the body where
+                the cream is particularly well absorbed. 
+                Select one location for each application only.</p>
+        </div>
+    </section>
+
     <section id="product">
         <img src="Mock.jpg" alt="Burgundy Supplies Skincare Product">
-        <h2>Radiance Glow Serum</h2>
-        <p>A lightweight, nourishing serum designed to hydrate, brighten, and rejuvenate your skin.</p>
+        <h2>Wild Yam Cream</h2>
+        <p>A lightweight, nourishing cream designed to support hormonal balance and skin health.</p>
         <ul>
             <li>Deep hydration & nourishment</li>
-            <li>Reduces fine lines & wrinkles</li>
-            <li>Enhances natural glow</li>
+            <li>Hormonal Balance Support</li>
+            <li>Natural Ingredients</li>
         </ul>
         <p class="price">R499.99</p>
         <button id="buy-now">Buy Now</button>
     </section>
     
     <footer>
-        <p>Contact us at <a href="Orders@burgundysuppliers.co.za">@burgundysupplies.com</a></p>
+        <p>Contact us at <a href="Orders@burgundysuppliers.co.za">orders@burgundysupplies.com</a></p>
         <p>&copy; 2025 Burgundy Supplies. All rights reserved.</p>
     </footer>
 
     <script>
         document.getElementById("buy-now").addEventListener("click", function() {
             // Create or get existing cart
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cart = [];
+            try {
+                const existingCart = localStorage.getItem('cart');
+                cart = existingCart ? JSON.parse(existingCart) : [];
+            } catch (e) {
+                console.error('Error parsing cart:', e);
+                cart = [];
+            }
             
+            // Create the product object with the correct image path
+            const product = {
+                id: 1,
+                name: "Wild Yam Cream",
+                description: "A lightweight, nourishing cream designed to support hormonal balance and skin health.",
+                price: Number(499.99),
+                quantity: 1,
+                image: "Mock.jpg"
+            };
+
             // Check if product already exists in cart
-            const existingProduct = cart.find(item => item.id === 1);
+            const existingProductIndex = cart.findIndex(item => item.id === product.id);
             
-            if (existingProduct) {
-                existingProduct.quantity += 1;
+            if (existingProductIndex !== -1) {
+                // If product exists, increment quantity
+                cart[existingProductIndex].quantity += 1;
             } else {
-                // Add new product to cart
-                cart.push({
-                    id: 1,
-                    name: "Radiance Glow Serum",
-                    description: "A lightweight, nourishing serum",
-                    price: 499.99,
-                    quantity: 1,
-                    image: "Mock.jpg"
-                });
+                // If product doesn't exist, add it to cart
+                cart.push(product);
             }
             
             // Save cart to localStorage
-            localStorage.setItem('cart', JSON.stringify(cart));
-            
-            // Redirect to cart page
-            window.location.href = "cart.html";
+            try {
+                localStorage.setItem('cart', JSON.stringify(cart));
+                console.log('Cart saved:', cart);
+                window.location.href = "cart.html";
+            } catch (error) {
+                console.error('Error saving cart:', error);
+                alert('There was an error adding the item to your cart. Please try again.');
+            }
         });
     </script>
 </body>
