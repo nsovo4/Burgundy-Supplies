@@ -60,16 +60,21 @@
             font-size: 1.2em;
             overflow: hidden;
             white-space: nowrap;
-            position: relative;
+            position: sticky;
+            z-index: 1000; /* Ensures it stays above other elements */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a slight shadow */
+            top: 0;
         }
+        
         .announcement-wrapper {
             display: inline-block;
             white-space: nowrap;
-            animation: marquee 50s linear infinite;
+            width: fit-content;
+            animation: scroll 30s linear infinite;
         }
-        @keyframes marquee {
+        @keyframes scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-10%); }
+            100% { transform: translateX(-50%); }
         }
 
         #product {
@@ -158,7 +163,7 @@
             padding: 40px;
             background: white;
             margin: 20px auto;
-            max-width: 1200px;
+            max-width: 100%;
             display: flex;
             gap: 30px;
             align-items: stretch;
@@ -166,7 +171,7 @@
 
         .ingredient-image {
             flex: 1;
-            max-width: 300px;
+            max-width: 100%;
         }
 
         .ingredient-image img {
@@ -248,12 +253,16 @@
     
     <div class="announcement-bar">
         <div class="announcement-wrapper">
-            <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
-            <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
-            <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
-            <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+            <div class="announcement-content">
+                <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+                <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+                <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+                <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+                <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+                <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
+            </div>
         </div>
-    </div>
+    </div>    
 
     <section class="ingredient-section">
         <div class="ingredient-image">
