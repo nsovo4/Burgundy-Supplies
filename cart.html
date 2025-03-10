@@ -304,9 +304,21 @@
                     <div class="empty-cart">
                         <h2>Your cart is empty</h2>
                         <p>Add some products to your cart and they will show up here</p><br><br>
-                        <a href="index.html" class="checkout-btn">Continue Shopping</a>
+                        <a href="index.html#product" class="checkout-btn">Continue Shopping</a>
                     </div>
                 `;
+
+                window.onload = function () {
+                  setTimeout(function () {
+                   if (window.location.hash) {
+                    let target = document.querySelector(window.location.hash);
+                    if (target) {
+                     target.scrollIntoView({ behavior: "smooth" });
+                    }
+                   }
+                  }, 300); // Adjust delay if needed
+                };
+
                 updateTotals();
                 return;
             }
