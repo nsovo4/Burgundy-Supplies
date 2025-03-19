@@ -172,7 +172,7 @@
         footer {
             background-color: #333;
             color: white;
-            padding: 10px;
+            padding: 5px;
             margin-top: auto;
         }
 
@@ -303,11 +303,17 @@
             if (!cart || cart.length === 0) {
                 cartContainer.innerHTML = `
                     <div class="empty-cart">
-                        <h2>Your cart is empty</h2>
-                        <p>Add some products to your cart and they will show up here</p><br><br>
+                        <h2>Your cart is empty</h2><br><br>
+                        
                         <a href="index.html#product" class="checkout-btn">Continue Shopping</a>
                     </div>
                 `;
+
+                // Set totals to 0 when cart is empty
+                document.getElementById('subtotal').textContent = 'R0.00';
+                document.getElementById('shipping').textContent = 'R0.00';
+                document.getElementById('discount').textContent = 'R0.00';
+                document.getElementById('total').textContent = 'R0.00';
 
                 window.onload = function () {
                   setTimeout(function () {
@@ -320,7 +326,6 @@
                   }, 300); // Adjust delay if needed
                 };
 
-                updateTotals();
                 return;
             }
 
@@ -440,5 +445,6 @@
         <p>Contact us at <a href="mailto:Orders@burgundysuppliers.co.za">orders@burgundysupplies.com</a></p>
         <p>&copy; 2025 Burgundy Supplies. All rights reserved.</p>
     </footer>
+
 </body>
 </html>
