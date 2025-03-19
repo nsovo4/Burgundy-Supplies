@@ -278,7 +278,8 @@
             <h3>Cart Summary</h3>
             <div class="cart-summary-details">
                 <p>Subtotal: <span id="subtotal">R0.00</span></p>
-                <p>Shipping: Free</p>
+                <p>Shipping: <span id="shipping">R0.00</span></p>
+                <p>Discount: <span id="discount">R0.00</span></p>
                 <p><strong>Total: <span id="total">R0.00</span></strong></p>
             </div>
             <button class="checkout-btn">Proceed to Checkout</button>
@@ -373,28 +374,51 @@
             try {
                 const cart = JSON.parse(localStorage.getItem('cart')) || [];
                 let subtotal = 0;
+                let totalQuantity = 0;
                 
-                // Calculate subtotal by iterating through cart items
+                // Calculate subtotal and total quantity by iterating through cart items
                 cart.forEach(item => {
                     const price = parseFloat(item.price);
                     const quantity = parseInt(item.quantity);
                     if (!isNaN(price) && !isNaN(quantity)) {
                         subtotal += price * quantity;
+                        totalQuantity += quantity;
                     }
                 });
                 
+                // Calculate shipping and discount
+                let shipping = 100;
+                let discount = 0;
+
+                if (totalQuantity >= 2) {
+                    shipping = 0;
+                }
+
+                if (totalQuantity >= 3) {
+                    discount = subtotal * 0.10;
+                }
+
+                const finalTotal = subtotal - discount + shipping;
+
                 // Format the totals with 2 decimal places
                 const formattedSubtotal = subtotal.toFixed(2);
+                const formattedShipping = shipping.toFixed(2);
+                const formattedDiscount = discount.toFixed(2);
+                const formattedTotal = finalTotal.toFixed(2);
                 
                 // Update the display
                 document.getElementById('subtotal').textContent = `R${formattedSubtotal}`;
-                document.getElementById('total').textContent = `R${formattedSubtotal}`;
+                document.getElementById('shipping').textContent = `R${formattedShipping}`;
+                document.getElementById('discount').textContent = `R${formattedDiscount}`;
+                document.getElementById('total').textContent = `R${formattedTotal}`;
                 
-                console.log('Updated totals:', { subtotal: formattedSubtotal });
+                console.log('Updated totals:', { subtotal: formattedSubtotal, shipping: formattedShipping, discount: formattedDiscount, total: formattedTotal });
             } catch (e) {
                 console.error('Error updating totals:', e);
                 // Set default values if there's an error
                 document.getElementById('subtotal').textContent = 'R0.00';
+                document.getElementById('shipping').textContent = 'R0.00';
+                document.getElementById('discount').textContent = 'R0.00';
                 document.getElementById('total').textContent = 'R0.00';
             }
         }

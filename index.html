@@ -6,239 +6,8 @@
     <meta name="theme-color" content="#800020">
     <title>Burgundy Supplies</title>
     <link rel="icon" type="image/png" href="favicon.png">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            background-color: #f8f8f8;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: #800020;
-            color: white;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            overflow: visible;
-        }
-
-        .header-logo {
-            height: 170px;
-            width: 225px;
-            margin: -30px 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cart-icon {
-            height: 70px;
-            width: 70px;
-            cursor: pointer;
-            margin: -15px 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        h1 {
-            font-size: 1.8em;
-            margin: 0;
-            text-align: center;
-        }
-
-        .announcement-bar {
-            background-color: #ffd700;
-            color: #800020;
-            padding: 10px;
-            font-weight: bold;
-            font-size: 1.2em;
-            overflow: hidden;
-            white-space: nowrap;
-            position: sticky;
-            z-index: 1000; /* Ensures it stays above other elements */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a slight shadow */
-            top: 0;
-        }
-        
-        .announcement-wrapper {
-            display: inline-block;
-            white-space: nowrap;
-            width: fit-content;
-            animation: scroll 30s linear infinite;
-        }
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        #product {
-            padding: 20px;
-            background: white;
-            margin: 20px auto;
-            max-width: 400px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            font-size: 1.1em;
-        }
-
-        img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        .price {
-            font-size: 1.5em;
-            color: #800020;
-        }
-
-        button {
-            background-color: #800020;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #a52a2a;
-        }
-        
-        .content {
-            flex: 1;
-        }
-
-        footer {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            margin-top: auto;
-        }
-
-        @media screen and (max-width: 768px) {
-            header {
-                justify-content: center;
-                padding: 5px;
-                position: relative;
-            }
-
-            header h1 {
-                display: none;
-            }
-
-            .cart-icon {
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .header-logo {
-                margin: -20px 0;
-                height: 140px;
-                width: 185px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .header-logo {
-                height: 120px;
-                width: 160px;
-            }
-
-            .cart-icon {
-                height: 50px;
-                width: 50px;
-            }
-        }
-
-        .ingredient-section {
-            padding: 40px;
-            background: white;
-            margin: 20px auto;
-            max-width: 100%;
-            display: flex;
-            gap: 30px;
-            align-items: stretch;
-        }
-
-        .ingredient-image {
-            flex: 1;
-            max-width: 100%;
-        }
-
-        .ingredient-image img {
-            width: 100%;
-            height: 100%;
-            border-radius: 20px;
-            object-fit: cover;
-        }
-
-        .ingredient-content {
-            flex: 1;
-            text-align: center;
-            padding: 30px 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 500px;
-            max-width: 300px;
-        }
-
-        .ingredient-content h2 {
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #800020;
-        }
-
-        .ingredient-content p {
-            line-height: 1.6;
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 1.1em;
-        }
-
-        @media screen and (max-width: 1024px) {
-            .ingredient-section {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .ingredient-image, .ingredient-content {
-                flex: 0 1 calc(50% - 15px);
-                max-width: calc(50% - 15px);
-            }
-        }
-
-        @media screen and (max-width: 768px) {
-            .ingredient-section {
-                flex-direction: column;
-                margin: 20px;
-                padding: 20px;
-            }
-
-            .ingredient-image, .ingredient-content {
-                max-width: 100%;
-                flex: 1 1 100%;
-            }
-
-            .ingredient-content {
-                min-height: auto;
-                padding: 20px;
-            }
-        }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
 </head>
 
 <body>
@@ -253,7 +22,7 @@
     </header>
     
     <div class="announcement-bar">
-        <div class="announcement-wrapper">
+        <a href="#product" class="announcement-wrapper">
             <div class="announcement-content">
                 <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
                 <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
@@ -262,7 +31,7 @@
                 <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
                 <span>Free shipping when you order 2 products &nbsp;|&nbsp; Free shipping plus 10% off when you order 3 or more &nbsp;|&nbsp;</span>
             </div>
-        </div>
+        </a>
     </div>    
 
     <section class="ingredient-section">
@@ -320,50 +89,6 @@
         <p>Contact us at <a href="mailto:Orders@burgundysuppliers.co.za">orders@burgundysupplies.com</a></p>
         <p>&copy; 2025 Burgundy Supplies. All rights reserved.</p>
     </footer>
-
-    <script>
-        document.getElementById("buy-now").addEventListener("click", function() {
-            // Create or get existing cart
-            let cart = [];
-            try {
-                const existingCart = localStorage.getItem('cart');
-                cart = existingCart ? JSON.parse(existingCart) : [];
-            } catch (e) {
-                console.error('Error parsing cart:', e);
-                cart = [];
-            }
-            
-            // Create the product object with the correct image path
-            const product = {
-                id: 1,
-                name: "Wild Yam Cream",
-                description: "A lightweight, nourishing cream designed to support hormonal balance and skin health.",
-                price: Number(499.99),
-                quantity: 1,
-                image: "Mock.jpg"
-            };
-
-            // Check if product already exists in cart
-            const existingProductIndex = cart.findIndex(item => item.id === product.id);
-            
-            if (existingProductIndex !== -1) {
-                // If product exists, increment quantity
-                cart[existingProductIndex].quantity += 1;
-            } else {
-                // If product doesn't exist, add it to cart
-                cart.push(product);
-            }
-            
-            // Save cart to localStorage
-            try {
-                localStorage.setItem('cart', JSON.stringify(cart));
-                console.log('Cart saved:', cart);
-                window.location.href = "cart.html";
-            } catch (error) {
-                console.error('Error saving cart:', error);
-                alert('There was an error adding the item to your cart. Please try again.');
-            }
-        });
-    </script>
+    
 </body>
 </html>
