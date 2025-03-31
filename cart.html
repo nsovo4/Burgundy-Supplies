@@ -1,333 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#800020">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#800020" />
     <title>Shopping Cart - Burgundy Suppliers</title>
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <script src="server.js"></script>
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            background-color: #f8f8f8;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        background-color: #f8f8f8;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      header {
+        background-color: #800020;
+        color: white;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: visible;
+      }
+
+      .header-logo {
+        height: 170px;
+        width: 225px;
+        margin: -30px 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      h1 {
+        font-size: 1.8em;
+        margin: 0;
+        text-align: center;
+      }
+
+      .cart-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #800020;
+      }
+
+      .cart-item {
+        display: grid;
+        grid-template-columns: 150px 2fr 1fr 1fr 1fr auto;
+        gap: 20px;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .cart-item img {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .quantity-controls button {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: #800020;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .quantity-controls span {
+        font-size: 1.1em;
+        min-width: 30px;
+        text-align: center;
+      }
+
+      .remove-btn {
+        color: #800020;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2em;
+      }
+
+      .cart-summary {
+        margin-top: 20px;
+        padding: 30px;
+        background: #f9f9f9;
+        border-radius: 5px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cart-summary-details {
+        margin: 20px 0;
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .cart-summary h3 {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        color: #800020;
+        text-align: center;
+      }
+
+      .cart-summary p {
+        font-size: 1.1em;
+        margin: 10px 0;
+        text-align: center;
+      }
+
+      #checkout-button {
+        background-color: #800020;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.1em;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        min-width: 200px;
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .checkout-btn:hover {
+        background-color: #a52a2a;
+      }
+
+      .empty-cart {
+        padding: 50px;
+        text-align: center;
+        color: #666;
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        padding: 5px;
+        margin-top: auto;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      @media screen and (max-width: 768px) {
+        header {
+          justify-content: center;
+          padding: 5px;
+          position: relative;
         }
 
-        header {
-            background-color: #800020;
-            color: white;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            overflow: visible;
+        header h1 {
+          display: none;
         }
 
         .header-logo {
-            height: 170px;
-            width: 225px;
-            margin: -30px 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        h1 {
-            font-size: 1.8em;
-            margin: 0;
-            text-align: center;
-        }
-
-        .cart-container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #800020;
+          margin: -20px 0;
+          height: 140px;
+          width: 185px;
         }
 
         .cart-item {
-            display: grid;
-            grid-template-columns: 150px 2fr 1fr 1fr 1fr auto;
-            gap: 20px;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #eee;
+          grid-template-columns: 100px 1fr;
+          gap: 10px;
         }
 
         .cart-item img {
-            width: 150px;
-            height: 150px;
-            object-fit: contain;
-            border-radius: 10px;
-            cursor: pointer;
+          width: 120px;
+          height: 120px;
+          margin-right: 10px;
+        }
+
+        .cart-item > * {
+          grid-column: span 2;
+        }
+
+        .cart-item img,
+        .cart-item .item-details {
+          grid-column: span 1;
         }
 
         .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .quantity-controls button {
-            width: 30px;
-            height: 30px;
-            border: none;
-            background: #800020;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quantity-controls span {
-            font-size: 1.1em;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .remove-btn {
-            color: #800020;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2em;
+          justify-content: center;
         }
 
         .cart-summary {
-            margin-top: 20px;
-            padding: 30px;
-            background: #f9f9f9;
-            border-radius: 5px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+          padding: 20px;
         }
 
         .cart-summary-details {
-            margin: 20px 0;
-            text-align: center;
-            width: 100%;
-            max-width: 300px;
+          margin: 15px 0;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        .header-logo {
+          height: 120px;
+          width: 160px;
         }
 
-        .cart-summary h3 {
-            font-size: 1.4em;
-            margin-bottom: 20px;
-            color: #800020;
-            text-align: center;
+        .cart-container {
+          margin: 10px;
+          padding: 10px;
         }
-
-        .cart-summary p {
-            font-size: 1.1em;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        .checkout-btn {
-            background-color: #800020;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1em;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            min-width: 200px;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .checkout-btn:hover {
-            background-color: #a52a2a;
-        }
-
-        .empty-cart {
-            padding: 50px;
-            text-align: center;
-            color: #666;
-        }
-
-        footer {
-            background-color: #333;
-            color: white;
-            padding: 5px;
-            margin-top: auto;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        @media screen and (max-width: 768px) {
-            header {
-                justify-content: center;
-                padding: 5px;
-                position: relative;
-            }
-
-            header h1 {
-                display: none;
-            }
-
-            .header-logo {
-                margin: -20px 0;
-                height: 140px;
-                width: 185px;
-            }
-
-            .cart-item {
-                grid-template-columns: 100px 1fr;
-                gap: 10px;
-            }
-
-            .cart-item img {
-                width: 120px;
-                height: 120px;
-                margin-right: 10px;
-            }
-
-            .cart-item > * {
-                grid-column: span 2;
-            }
-
-            .cart-item img,
-            .cart-item .item-details {
-                grid-column: span 1;
-            }
-
-            .quantity-controls {
-                justify-content: center;
-            }
-
-            .cart-summary {
-                padding: 20px;
-            }
-
-            .cart-summary-details {
-                margin: 15px 0;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .header-logo {
-                height: 120px;
-                width: 160px;
-            }
-
-            .cart-container {
-                margin: 10px;
-                padding: 10px;
-            }
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .modal-content {
-            margin: 15% auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-        }
-
-        .modal-content img {
-            width: 100%;
-            height: auto;
-        }
-
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <a href="index.html">
-            <img src="logo.png" alt="Burgundy Supplies Logo" class="header-logo">
-        </a>
-        <h1>Shopping Cart</h1>
+      <a href="index.html">
+        <img src="logo.png" alt="Burgundy Supplies Logo" class="header-logo" />
+      </a>
+      <h1>Shopping Cart</h1>
     </header>
 
     <div class="cart-container">
-        <div id="cart-items">
-            <!-- Cart items will be dynamically inserted here -->
-        </div>
+      <div id="cart-items">
+        <!-- Cart items will be dynamically inserted here -->
+      </div>
 
-        <div class="cart-summary">
-            <h3>Cart Summary</h3>
-            <div class="cart-summary-details">
-                <p>Subtotal: <span id="subtotal">R0.00</span></p>
-                <p>Shipping: <span id="shipping">R0.00</span></p>
-                <p>Discount: <span id="discount">R0.00</span></p>
-                <p><strong>Total: <span id="total">R0.00</span></strong></p>
-            </div>
-            <button class="checkout-btn">Proceed to Checkout</button>
+      <div class="cart-summary">
+        <h3>Cart Summary</h3>
+        <div class="cart-summary-details">
+          <p>Subtotal: <span id="subtotal">R0.00</span></p>
+          <p>Shipping: <span id="shipping">R0.00</span></p>
+          <p>Discount: <span id="discount">R0.00</span></p>
+          <p>
+            <strong>Total: <span id="total">R0.00</span></strong>
+          </p>
         </div>
-    </div>
-
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-        <span class="close">&times;</span>
-        <div class="modal-content">
-            <img id="modal-image" src="" alt="Product Image">
-        </div>
+        <button id="checkout-button">Proceed to Checkout</button>
+      </div>
     </div>
 
     <script>
-        function updateCart() {
-            const cartContainer = document.getElementById('cart-items');
-            let cart = [];
-            
-            try {
-                const cartData = localStorage.getItem('cart');
-                cart = cartData ? JSON.parse(cartData) : [];
-                console.log('Retrieved cart:', cart);
-            } catch (e) {
-                console.error('Error loading cart:', e);
-                cart = [];
-            }
-            
-            if (!cart || cart.length === 0) {
-                cartContainer.innerHTML = `
+      function updateCart() {
+        const cartContainer = document.getElementById("cart-items");
+        let cart = [];
+
+        try {
+          const cartData = localStorage.getItem("cart");
+          cart = cartData ? JSON.parse(cartData) : [];
+          console.log("Retrieved cart:", cart);
+        } catch (e) {
+          console.error("Error loading cart:", e);
+          cart = [];
+        }
+
+        if (!cart || cart.length === 0) {
+          cartContainer.innerHTML = `
                     <div class="empty-cart">
                         <h2>Your cart is empty</h2><br><br>
                         
@@ -335,168 +288,205 @@
                     </div>
                 `;
 
-                // Set totals to 0 when cart is empty
-                document.getElementById('subtotal').textContent = 'R0.00';
-                document.getElementById('shipping').textContent = 'R0.00';
-                document.getElementById('discount').textContent = 'R0.00';
-                document.getElementById('total').textContent = 'R0.00';
+          // Set totals to 0 when cart is empty
+          document.getElementById("subtotal").textContent = "R0.00";
+          document.getElementById("shipping").textContent = "R0.00";
+          document.getElementById("discount").textContent = "R0.00";
+          document.getElementById("total").textContent = "R0.00";
 
-                window.onload = function () {
-                  setTimeout(function () {
-                   if (window.location.hash) {
-                    let target = document.querySelector(window.location.hash);
-                    if (target) {
-                     target.scrollIntoView({ behavior: "smooth" });
-                    }
-                   }
-                  }, 300); // Adjust delay if needed
-                };
+          window.onload = function () {
+            setTimeout(function () {
+              if (window.location.hash) {
+                let target = document.querySelector(window.location.hash);
+                if (target) {
+                  target.scrollIntoView({ behavior: "smooth" });
+                }
+              }
+            }, 300); // Adjust delay if needed
+          };
 
-                return;
-            }
+          return;
+        }
 
-            cartContainer.innerHTML = cart.map(item => `
+        cartContainer.innerHTML = cart
+          .map(
+            (item) => `
                 <div class="cart-item">
-                    <img src="Mock.jpg" alt="${item.name}" onclick="openModal('Mock.jpg')">
+                    <img src="Mock.jpg" alt="${
+                      item.name
+                    }" onclick="openModal('Mock.jpg')">
                     <div class="item-details">
                         <h3>${item.name}</h3>
                     </div>
                     <div class="quantity-controls">
-                        <button onclick="updateQuantity(${item.id}, -1)">−</button>
+                        <button onclick="updateQuantity(${
+                          item.id
+                        }, -1)">−</button>
                         <span>${item.quantity}</span>
-                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button onclick="updateQuantity(${
+                          item.id
+                        }, 1)">+</button>
                     </div>
                     <div class="price">R${Number(item.price).toFixed(2)}</div>
-                    <div class="total">R${(Number(item.price) * item.quantity).toFixed(2)}</div>
-                    <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
+                    <div class="total">R${(
+                      Number(item.price) * item.quantity
+                    ).toFixed(2)}</div>
+                    <button class="remove-btn" onclick="removeItem(${
+                      item.id
+                    })">×</button>
                 </div>
-            `).join('');
+            `
+          )
+          .join("");
 
-            updateTotals();
-        }
+        updateTotals();
+      }
 
-        function updateQuantity(id, change) {
-            try {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const itemIndex = cart.findIndex(item => item.id === id);
-                
-                if (itemIndex !== -1) {
-                    cart[itemIndex].quantity = Math.max(1, cart[itemIndex].quantity + change);
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    updateCart();
-                }
-            } catch (e) {
-                console.error('Error updating quantity:', e);
-            }
-        }
+      function updateQuantity(id, change) {
+        try {
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          const itemIndex = cart.findIndex((item) => item.id === id);
 
-        function removeItem(id) {
-            try {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                cart = cart.filter(item => item.id !== id);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCart();
-            } catch (e) {
-                console.error('Error removing item:', e);
-            }
-        }
-
-        function updateTotals() {
-            try {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                let subtotal = 0;
-                let totalQuantity = 0;
-                
-                // Calculate subtotal and total quantity by iterating through cart items
-                cart.forEach(item => {
-                    const price = parseFloat(item.price);
-                    const quantity = parseInt(item.quantity);
-                    if (!isNaN(price) && !isNaN(quantity)) {
-                        subtotal += price * quantity;
-                        totalQuantity += quantity;
-                    }
-                });
-                
-                // Calculate shipping and discount
-                let shipping = 100;
-                let discount = 0;
-
-                if (totalQuantity >= 2) {
-                    shipping = 0;
-                }
-
-                if (totalQuantity >= 3) {
-                    discount = subtotal * 0.10;
-                }
-
-                const finalTotal = subtotal - discount + shipping;
-
-                // Format the totals with 2 decimal places
-                const formattedSubtotal = subtotal.toFixed(2);
-                const formattedShipping = shipping.toFixed(2);
-                const formattedDiscount = discount.toFixed(2);
-                const formattedTotal = finalTotal.toFixed(2);
-                
-                // Update the display
-                document.getElementById('subtotal').textContent = `R${formattedSubtotal}`;
-                document.getElementById('shipping').textContent = `R${formattedShipping}`;
-                document.getElementById('discount').textContent = `R${formattedDiscount}`;
-                document.getElementById('total').textContent = `R${formattedTotal}`;
-                
-                console.log('Updated totals:', { subtotal: formattedSubtotal, shipping: formattedShipping, discount: formattedDiscount, total: formattedTotal });
-            } catch (e) {
-                console.error('Error updating totals:', e);
-                // Set default values if there's an error
-                document.getElementById('subtotal').textContent = 'R0.00';
-                document.getElementById('shipping').textContent = 'R0.00';
-                document.getElementById('discount').textContent = 'R0.00';
-                document.getElementById('total').textContent = 'R0.00';
-            }
-        }
-
-        // Initialize cart on page load
-        document.addEventListener('DOMContentLoaded', function() {
+          if (itemIndex !== -1) {
+            cart[itemIndex].quantity = Math.max(
+              1,
+              cart[itemIndex].quantity + change
+            );
+            localStorage.setItem("cart", JSON.stringify(cart));
             updateCart();
-        });
+          }
+        } catch (e) {
+          console.error("Error updating quantity:", e);
+        }
+      }
 
-        // Update cart when storage changes
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'cart') {
-                updateCart();
+      function removeItem(id) {
+        try {
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          cart = cart.filter((item) => item.id !== id);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCart();
+        } catch (e) {
+          console.error("Error removing item:", e);
+        }
+      }
+
+      function updateTotals() {
+        try {
+          const cart = JSON.parse(localStorage.getItem("cart")) || [];
+          let subtotal = 0;
+          let totalQuantity = 0;
+
+          // Calculate subtotal and total quantity by iterating through cart items
+          cart.forEach((item) => {
+            const price = parseFloat(item.price);
+            const quantity = parseInt(item.quantity);
+            if (!isNaN(price) && !isNaN(quantity)) {
+              subtotal += price * quantity;
+              totalQuantity += quantity;
             }
-        });
+          });
 
-        // Modal functionality
-        function openModal(imageSrc) {
-            const modal = document.getElementById('myModal');
-            const modalImage = document.getElementById('modal-image');
-            modal.style.display = "block";
-            modalImage.src = imageSrc;
-        }
+          // Calculate shipping and discount
+          let shipping = 100;
+          let discount = 0;
 
-        function closeModal() {
-            const modal = document.getElementById('myModal');
-            modal.style.display = "none";
-        }
+          if (totalQuantity >= 2) {
+            shipping = 0;
+          }
 
-        // Close the modal when the user clicks on <span> (x)
-        document.querySelector('.close').onclick = function() {
-            closeModal();
-        }
+          if (totalQuantity >= 3) {
+            discount = subtotal * 0.1;
+          }
 
-        // Close the modal when the user clicks anywhere outside of the modal
-        window.onclick = function(event) {
-            const modal = document.getElementById('myModal');
-            if (event.target == modal) {
-                closeModal();
-            }
+          const finalTotal = subtotal - discount + shipping;
+
+          // Format the totals with 2 decimal places
+          const formattedSubtotal = subtotal.toFixed(2);
+          const formattedShipping = shipping.toFixed(2);
+          const formattedDiscount = discount.toFixed(2);
+          const formattedTotal = finalTotal.toFixed(2);
+
+          // Update the display
+          document.getElementById(
+            "subtotal"
+          ).textContent = `R${formattedSubtotal}`;
+          document.getElementById(
+            "shipping"
+          ).textContent = `R${formattedShipping}`;
+          document.getElementById(
+            "discount"
+          ).textContent = `R${formattedDiscount}`;
+          document.getElementById("total").textContent = `R${formattedTotal}`;
+
+          console.log("Updated totals:", {
+            subtotal: formattedSubtotal,
+            shipping: formattedShipping,
+            discount: formattedDiscount,
+            total: formattedTotal,
+          });
+        } catch (e) {
+          console.error("Error updating totals:", e);
+          // Set default values if there's an error
+          document.getElementById("subtotal").textContent = "R0.00";
+          document.getElementById("shipping").textContent = "R0.00";
+          document.getElementById("discount").textContent = "R0.00";
+          document.getElementById("total").textContent = "R0.00";
         }
+      }
+
+      // Initialize cart on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        updateCart();
+      });
+
+      // Update cart when storage changes
+      window.addEventListener("storage", function (e) {
+        if (e.key === "cart") {
+          updateCart();
+        }
+      });
     </script>
 
     <footer>
-        <p>Contact us at <a href="mailto:Orders@burgundysuppliers.co.za">orders@burgundysupplies.com</a></p>
-        <p>&copy; 2025 Burgundy Suppliers. All rights reserved.</p>
+      <p>
+        Contact us at
+        <a href="mailto:Orders@burgundysuppliers.co.za">orders@burgundysupplies.com</a>
+      </p>
+      <p>&copy; 2025 Burgundy Suppliers. All rights reserved.</p>
     </footer>
 
-</body>
+    <script>
+      document
+        .getElementById("checkout-button")
+        .addEventListener("click", function () {
+          updateTotals(); // Ensure totals are updated before checkout
+          const totalAmount =
+            parseFloat(
+              document.getElementById("total").textContent.replace("R", "")
+            ) * 100; // Convert to cents
+
+          const yoco = new YocoSDK({
+            publicKey: "pk_test_30ca5f2aJv5oL2r83f24",
+          });
+
+          yoco.showPopup({
+            amountInCents: totalAmount,
+            currency: "ZAR",
+            name: "Burgundy Suppliers",
+            description: "Order Payment",
+            callback: function (result) {
+              if (result.error) {
+                console.error("Payment failed:", result.error);
+              } else {
+                console.log("Payment successful:", result);
+                alert("Payment Successful!");
+                localStorage.removeItem("cart"); // Clear cart after payment
+                window.location.href = "index.html"; // Redirect if needed
+              }
+            },
+          });
+        });
+    </script>
+  </body>
 </html>
