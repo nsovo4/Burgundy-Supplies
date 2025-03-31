@@ -6,7 +6,7 @@ app.use(express.json());
 
 app.post("/verify-payment", async (req, res) => {
   const { paymentId } = req.body;
-  const secretKey = "sk_test_bb8a2b86Q4MKg9l33d240ce99d2c"; // Replace with your LIVE private key
+  const secretKey = "sk_test_bb8a2b86Q4MKg9l33d240ce99d2c"; // private key
 
   try {
     const response = await axios.get(`https://online.yoco.com/v1/payments/${paymentId}`, {
