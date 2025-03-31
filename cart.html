@@ -345,6 +345,9 @@
           <label for="address">Street Address</label>
           <input type="text" id="address" name="address" placeholder="Enter your address" required />
 
+          <label for="address">Suburb</label>
+          <input type="text" id="Suburb" name="suburb" placeholder="Enter your suburb" required />
+
           <label for="city">City</label>
           <input type="text" id="city" name="city" placeholder="Enter your city" required />
 
@@ -509,7 +512,7 @@
     </script>
 
     <footer>
-      <p>Contact us at<a href="mailto:Orders@burgundysuppliers.co.za">orders@burgundysupplies.com</a></p>
+      <p>Contact us at <a href="mailto:Orders@burgundysuppliers.co.za">orders@burgundysupplies.com</a></p>
       <p>&copy; 2025 Burgundy Suppliers. All rights reserved.</p>
     </footer>
 
@@ -519,18 +522,21 @@
   
           // Validate the form (all fields are required)
           const name = document.getElementById("name").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const phone = document.getElementById("phone").value.trim();
           const address = document.getElementById("address").value.trim();
+          const suburb = document.getElementById("Suburb").value.trim();
           const city = document.getElementById("city").value.trim();
           const postalCode = document.getElementById("postal-code").value.trim();
-          const phone = document.getElementById("phone").value.trim();
+          
   
-          if (!name || !address || !city || !postalCode || !phone) {
+          if (!name || !address || !city || !postalCode || !phone || !email || !suburb) {
             alert("Please fill in all fields.");
             return;
           }
   
           // If validation passes, proceed to payment
-          const totalAmount = parseFloat(document.getElementById("total").textContent.replace("R", "")) * 100; // Convert to cents
+          const totalAmount = parseFloat(document.getElementById("total").textContent.replace("R", "")) * 100; 
   
           const yoco = new YocoSDK({
             publicKey: "pk_test_30ca5f2aJv5oL2r83f24",
