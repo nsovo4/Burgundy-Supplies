@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#800020" />
-    <title>Shopping Cart - Burgundy Suppliers</title>
+    <title>Cart - Burgundy Suppliers</title>
     <link rel="icon" type="image/png" href="favicon.png" />
     <script src="server.js"></script>
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
@@ -165,6 +165,24 @@
         color: #666;
       }
 
+      .empty-cart .checkout-btn {
+        background-color: #800020; 
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.1em;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none; 
+        display: inline-block; 
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      .empty-cart .checkout-btn:hover {
+        background-color: #a52a2a; 
+      }
+
       footer {
         background-color: #333;
         color: white;
@@ -175,6 +193,52 @@
       a {
         text-decoration: none;
         color: inherit;
+      }
+
+      .cart-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #800020;
+      }
+
+      .form-container {
+        margin-top: 20px;
+        padding: 20px;
+        background: #eeeeee;
+        border-radius: 5px;
+        text-align: left;
+      }
+
+      .form-container label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .form-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .form-container button {
+        background-color: #800020;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.1em;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      .form-container button:hover {
+        background-color: #a52a2a;
       }
 
       @media screen and (max-width: 768px) {
@@ -257,13 +321,38 @@
         <h3>Cart Summary</h3>
         <div class="cart-summary-details">
           <p>Subtotal: <span id="subtotal">R0.00</span></p>
-          <p>Shipping: <span id="shipping">R0.00</span></p>
           <p>Discount: <span id="discount">R0.00</span></p>
           <p>
             <strong>Total: <span id="total">R0.00</span></strong>
           </p>
         </div>
-        <button id="checkout-button">Proceed to Checkout</button>
+      </div>
+    </div>
+
+    <div class="cart-container">
+      <h3>Enter Your Delivery Address</h3>
+      <div class="form-container">
+        <form id="address-form">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required />
+
+          <label for="name">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email address" required />
+
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required />
+
+          <label for="address">Street Address</label>
+          <input type="text" id="address" name="address" placeholder="Enter your address" required />
+
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" placeholder="Enter your city" required />
+
+          <label for="postal-code">Postal Code</label>
+          <input type="number" id="postal-code" name="postal-code" placeholder="Enter your postal code" required />
+
+          <button type="submit">Proceed to Payment</button>
+        </form>
       </div>
     </div>
 
@@ -292,20 +381,8 @@
 
           // Set totals to 0 when cart is empty
           document.getElementById("subtotal").textContent = "R0.00";
-          document.getElementById("shipping").textContent = "R0.00";
           document.getElementById("discount").textContent = "R0.00";
           document.getElementById("total").textContent = "R0.00";
-
-          window.onload = function () {
-            setTimeout(function () {
-              if (window.location.hash) {
-                let target = document.querySelector(window.location.hash);
-                if (target) {
-                  target.scrollIntoView({ behavior: "smooth" });
-                }
-              }
-            }, 300); // Adjust delay if needed
-          };
 
           return;
         }
@@ -314,28 +391,20 @@
           .map(
             (item) => `
                 <div class="cart-item">
-                    <img src="Mock.jpg" alt="${
-                      item.name
-                    }" onclick="openModal('Mock.jpg')">
+                    <img src="Mock.jpg" alt="${item.name}">
                     <div class="item-details">
                         <h3>${item.name}</h3>
                     </div>
                     <div class="quantity-controls">
-                        <button onclick="updateQuantity(${
-                          item.id
-                        }, -1)">−</button>
+                        <button onclick="updateQuantity(${item.id}, -1)">−</button>
                         <span>${item.quantity}</span>
-                        <button onclick="updateQuantity(${
-                          item.id
-                        }, 1)">+</button>
+                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
                     </div>
                     <div class="price">R${Number(item.price).toFixed(2)}</div>
                     <div class="total">R${(
                       Number(item.price) * item.quantity
                     ).toFixed(2)}</div>
-                    <button class="remove-btn" onclick="removeItem(${
-                      item.id
-                    })">×</button>
+                    <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
                 </div>
             `
           )
@@ -389,23 +458,17 @@
             }
           });
 
-          // Calculate shipping and discount
-          let shipping = 100;
+          // Calculate discount
           let discount = 0;
-
-          if (totalQuantity >= 2) {
-            shipping = 0;
-          }
 
           if (totalQuantity >= 3) {
             discount = subtotal * 0.1;
           }
 
-          const finalTotal = subtotal - discount + shipping;
+          const finalTotal = subtotal - discount;
 
           // Format the totals with 2 decimal places
           const formattedSubtotal = subtotal.toFixed(2);
-          const formattedShipping = shipping.toFixed(2);
           const formattedDiscount = discount.toFixed(2);
           const formattedTotal = finalTotal.toFixed(2);
 
@@ -414,16 +477,12 @@
             "subtotal"
           ).textContent = `R${formattedSubtotal}`;
           document.getElementById(
-            "shipping"
-          ).textContent = `R${formattedShipping}`;
-          document.getElementById(
             "discount"
           ).textContent = `R${formattedDiscount}`;
           document.getElementById("total").textContent = `R${formattedTotal}`;
 
           console.log("Updated totals:", {
             subtotal: formattedSubtotal,
-            shipping: formattedShipping,
             discount: formattedDiscount,
             total: formattedTotal,
           });
@@ -431,7 +490,6 @@
           console.error("Error updating totals:", e);
           // Set default values if there's an error
           document.getElementById("subtotal").textContent = "R0.00";
-          document.getElementById("shipping").textContent = "R0.00";
           document.getElementById("discount").textContent = "R0.00";
           document.getElementById("total").textContent = "R0.00";
         }
@@ -456,19 +514,28 @@
     </footer>
 
     <script>
-      document
-        .getElementById("checkout-button")
-        .addEventListener("click", function () {
-          updateTotals(); // Ensure totals are updated before checkout
-          const totalAmount =
-            parseFloat(
-              document.getElementById("total").textContent.replace("R", "")
-            ) * 100; // Convert to cents
-
+        document.getElementById("address-form").addEventListener("submit", function (e) {
+          e.preventDefault(); // Prevent form submission
+  
+          // Validate the form (all fields are required)
+          const name = document.getElementById("name").value.trim();
+          const address = document.getElementById("address").value.trim();
+          const city = document.getElementById("city").value.trim();
+          const postalCode = document.getElementById("postal-code").value.trim();
+          const phone = document.getElementById("phone").value.trim();
+  
+          if (!name || !address || !city || !postalCode || !phone) {
+            alert("Please fill in all fields.");
+            return;
+          }
+  
+          // If validation passes, proceed to payment
+          const totalAmount = parseFloat(document.getElementById("total").textContent.replace("R", "")) * 100; // Convert to cents
+  
           const yoco = new YocoSDK({
             publicKey: "pk_test_30ca5f2aJv5oL2r83f24",
           });
-
+  
           yoco.showPopup({
             amountInCents: totalAmount,
             currency: "ZAR",
@@ -477,15 +544,16 @@
             callback: function (result) {
               if (result.error) {
                 console.error("Payment failed:", result.error);
+                alert("Payment failed. Please try again.");
               } else {
                 console.log("Payment successful:", result);
                 alert("Payment Successful!");
                 localStorage.removeItem("cart"); // Clear cart after payment
-                window.location.href = "index.html"; // Redirect if needed
+                window.location.href = "index.html"; // Redirect to homepage
               }
             },
           });
         });
-    </script>
+      </script>
   </body>
 </html>
