@@ -45,7 +45,6 @@
         margin: 0;
         padding: 15px;
         text-align: center;
-        
       }
 
       .cart-container {
@@ -166,21 +165,21 @@
       }
 
       .empty-cart .checkout-btn {
-        background-color: #800020; 
+        background-color: #800020;
         color: white;
         border: none;
         padding: 15px 40px;
         font-size: 1.1em;
         border-radius: 5px;
         cursor: pointer;
-        text-decoration: none; 
-        display: inline-block; 
+        text-decoration: none;
+        display: inline-block;
         margin-top: 20px;
         transition: background-color 0.3s ease;
       }
 
       .empty-cart .checkout-btn:hover {
-        background-color: #a52a2a; 
+        background-color: #a52a2a;
       }
 
       footer {
@@ -339,25 +338,67 @@
       <div class="form-container">
         <form id="address-form">
           <label for="name">Full Name</label>
-          <input type="text" id="name" name="name" placeholder="Enter your full name" required />
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            required
+          />
 
           <label for="name">Email Address</label>
-          <input type="email" id="email" name="email" placeholder="Enter your email address" required />
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email address"
+            required
+          />
 
           <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required />
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Enter your phone number"
+            required
+          />
 
           <label for="address">Street Address</label>
-          <input type="text" id="address" name="address" placeholder="Enter your address" required />
+          <input
+            type="text"
+            id="address"
+            name="address"
+            placeholder="Enter your address"
+            required
+          />
 
           <label for="address">Suburb</label>
-          <input type="text" id="Suburb" name="suburb" placeholder="Enter your suburb" required />
+          <input
+            type="text"
+            id="Suburb"
+            name="suburb"
+            placeholder="Enter your suburb"
+            required
+          />
 
           <label for="city">City</label>
-          <input type="text" id="city" name="city" placeholder="Enter your city" required />
+          <input
+            type="text"
+            id="city"
+            name="city"
+            placeholder="Enter your city"
+            required
+          />
 
           <label for="postal-code">Postal Code</label>
-          <input type="number" id="postal-code" name="postal-code" placeholder="Enter your postal code" required />
+          <input
+            type="number"
+            id="postal-code"
+            name="postal-code"
+            placeholder="Enter your postal code"
+            required
+          />
 
           <button type="submit">Proceed to Payment</button>
         </form>
@@ -404,15 +445,21 @@
                         <h3>${item.name}</h3>
                     </div>
                     <div class="quantity-controls">
-                        <button onclick="updateQuantity(${item.id}, -1)">−</button>
+                        <button onclick="updateQuantity(${
+                          item.id
+                        }, -1)">−</button>
                         <span>${item.quantity}</span>
-                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button onclick="updateQuantity(${
+                          item.id
+                        }, 1)">+</button>
                     </div>
                     <div class="price">R${Number(item.price).toFixed(2)}</div>
                     <div class="total">R${(
                       Number(item.price) * item.quantity
                     ).toFixed(2)}</div>
-                    <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
+                    <button class="remove-btn" onclick="removeItem(${
+                      item.id
+                    })">×</button>
                 </div>
             `
           )
@@ -517,13 +564,20 @@
     </script>
 
     <footer>
-      <p>Contact us at <a href="mailto:Orders@burgundysuppliers.co.za">orders@burgundysuppliers.com</a></p>
+      <p>
+        Contact us at
+        <a href="mailto:Orders@burgundysuppliers.co.za"
+          >orders@burgundysuppliers.com</a
+        >
+      </p>
       <p>&copy; 2025 Burgundy Suppliers. All rights reserved.</p>
     </footer>
 
     <script>
-        document.getElementById("address-form").addEventListener("submit", function (e) {
-          e.preventDefault(); 
+      document
+        .getElementById("address-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
 
           const name = document.getElementById("name").value.trim();
           const email = document.getElementById("email").value.trim();
@@ -531,21 +585,33 @@
           const address = document.getElementById("address").value.trim();
           const suburb = document.getElementById("Suburb").value.trim();
           const city = document.getElementById("city").value.trim();
-          const postalCode = document.getElementById("postal-code").value.trim();
-          
-  
-          if (!name || !address || !city || !postalCode || !phone || !email || !suburb) {
+          const postalCode = document
+            .getElementById("postal-code")
+            .value.trim();
+
+          if (
+            !name ||
+            !address ||
+            !city ||
+            !postalCode ||
+            !phone ||
+            !email ||
+            !suburb
+          ) {
             alert("Please fill in all fields.");
             return;
           }
-  
+
           // If validation passes, proceed to payment
-          const totalAmount = parseFloat(document.getElementById("total").textContent.replace("R", "")) * 100; 
-  
+          const totalAmount =
+            parseFloat(
+              document.getElementById("total").textContent.replace("R", "")
+            ) * 100;
+
           const yoco = new YocoSDK({
             publicKey: "pk_test_30ca5f2aJv5oL2r83f24",
           });
-  
+
           yoco.showPopup({
             amountInCents: totalAmount,
             currency: "ZAR",
@@ -557,13 +623,29 @@
                 alert("Payment failed. Please try again.");
               } else {
                 console.log("Payment successful:", result);
-                alert("Payment Successful!");
-                localStorage.removeItem("cart"); // Clear cart after payment
-                window.location.href = "index.html"; // Redirect to homepage
+                Swal.fire({
+                  title: "Payment Successful!",
+                  text: "Check your email for the receipt.",
+                  icon: "success",
+                }).then(() => {
+                  Swal.fire ({
+                    title: "Redirecting...",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    didOpen: () => {
+                      Swal.showLoading();
+                    },
+                    didClose: () => {
+                localStorage.removeItem("cart");
+                window.location.href = "index.html";
+                    }
+                 });
+              });
               }
             },
           });
         });
-      </script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
 </html>
