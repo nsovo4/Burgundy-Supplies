@@ -11,7 +11,9 @@
   </head>
 
   <body>
-    <div class="loader" id="loader"></div>
+    <div id="loader">
+      <div class="spinner"></div>
+    </div>
 
     <header>
       <a href="index.html">
@@ -119,17 +121,15 @@
     </footer>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        document.body.classList.add("loading");
-      });
-
-      window.onload = function () {
+      window.addEventListener("load", function () {
         const loader = document.getElementById("loader");
         if (loader) {
-          loader.style.display = "none"; 
+          loader.style.opacity = "0";
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 500);
         }
-        document.body.classList.remove("loading"); 
-      };
+      });
     </script>
 
   </body>
