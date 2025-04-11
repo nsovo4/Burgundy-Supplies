@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("buy-now").addEventListener("click", function() {
         
