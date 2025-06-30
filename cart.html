@@ -755,63 +755,29 @@
             });
 
           // Proceed to creating shipment after successful payment
-          fetch("https://api.shiplogic.com/v1/shipments", {
+          fetch("https://localhost:3000/create-shipment", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: "6127a62cc60441c49f65e66c35f320eb",
             },
 
             body: JSON.stringify({
-              collection_address: {
-                type: "business",
-                company: "Burgundy Suppliers",
-                street_address: "Itala Pl",
-                local_area: "Mooikloof",
-                city: "Pretoria",
-                code: "0081",
-                zone: "Gauteng",
-                country: "ZA",
-                lat: "-25.8443564",
-                lng: "28.3243642",
-              },
-              collection_contact: {
-                name: "Burgundy Suppliers",
-                phone: "073 220 5135",
-                email: "Orders@burgundysuppliers.co.za",
-              },
-
-              delivery_address: {
-                name,
-                address,
-                city,
-                email,
-                phone,
-                postal_code,
-                suburb,
-              },
-              delivery_contact: {
-                name,
-                email,
-                phone,
-              },
-
-              // Uncomment and edit the following if you want to include parcel details:
-              // parcel: {
-              //   weight: 1.0,
-              //   dimensions: {
-              //     length: 30,
-              //     width: 20,
-              //     height: 10,
-              //   },
-              // },
-              description: "Wild Yam Cream",
-              service: "overnight",
+              name,
+              email,
+              phone,
+              address,
+              suburb,
+              city,
+              postal_code,
             }),
           })
-            .then((response) => response.json())
+            .then((res) => res.json())
             .then((data) => {
-              console.log("Shipment created:", data);
+              if (data.success) {
+                console.log("Shipment created:", data.shipment);
+              } else {
+                console.error("Shipment failed:", data.message);
+              }
             })
             .catch((error) => {
               console.error("Error creating shipment:", error);
