@@ -8,12 +8,6 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <script src="server.js"></script>
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-    <script>
-      (function () {
-        emailjs.init("InmKXs_hsuA7qc5-Y"); // from EmailJS dashboard
-      })();
-    </script>
 
     <style>
       body {
@@ -738,21 +732,6 @@
             console.error("Error saving data: ", error);
             alert("Error saving data.");
           }
-
-          emailjs
-            .send("service_gtq6z7k", "template_uqzj3a5", {
-              full_name: name,
-              subtotal: subtotal,
-              discount: discount,
-              total: finalTotal,
-              email_to: email,
-            })
-            .then(() => {
-              alert("Order confirmation sent!");
-            })
-            .catch((error) => {
-              console.error("Email sending failed: ", error);
-            });
 
           // Proceed to creating shipment after successful payment
           fetch("https://localhost:3000/create-shipment", {

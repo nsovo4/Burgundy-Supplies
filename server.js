@@ -1,7 +1,12 @@
+require("dotenv").config();
 
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
+const nodemailer = require("nodemailer");
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 app.use(cors()); 
@@ -29,6 +34,45 @@ app.post("/verify-payment", async (req, res) => {
     res.status(500).json({ success: false, message: "Error verifying payment." });
   }
 });
+
+// Nodemailer setup
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,    // Replace with your email
+    pass: process.env.EMAIL_PASS,                // Use App Password (not normal password)
+  },
+});
+
+function generateInvoicePDF(name, address, trackingNumber, callback) {
+  const doc = new PDFDocument();
+  const filePath = path.join(__dirname, "invoice.pdf");
+  const stream = fs.createWriteStream(filePath);
+  doc.pipe(stream);
+
+  doc
+    .fontSize(20)
+    .fillColor("#800020")
+    .text("Burgundy Suppliers", { align: "center" });
+
+  doc
+    .moveDown()
+    .fontSize(12)
+    .fillColor("black")
+    .text(`Invoice for ${name}`)
+    .text(`Shipping to: ${address}`)
+    .text(`Tracking Number: ${trackingNumber}`)
+    .moveDown()
+    .text("Product: Wild Yam Cream")
+    .text("Quantity: 1")
+    .text("Total: R199.00", { underline: true });
+
+  doc.end();
+
+  stream.on("finish", () => {
+    callback(filePath);
+  });
+}
 
 // Create shipment after successful payment
 app.post("/create-shipment", async (req, res) => {
@@ -109,10 +153,49 @@ app.post("/create-shipment", async (req, res) => {
       },
     });
 
-    res.json({ success: true, shipment: response.data });
+    const shipment = response.data;
+    const trackingNumber = shipment.tracking_number;
+    const labelUrl = shipment.documents.label;
+
+    // Generate PDF invoice
+    generateInvoicePDF(name, address, trackingNumber, async (invoicePath) => {
+      const mailOptions = {
+        from: "yourcompanyemail@gmail.com",
+        to: email,
+        subject: "Your Order from Burgundy Suppliers",
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
+            <h2 style="color: #800020;">Burgundy Suppliers</h2>
+            <p>Hi <strong>${name}</strong>,</p>
+            <p>Thank you for your purchase! Your order has been processed and is on the way.</p>
+            <p><strong style="color: #800020;">Tracking Number:</strong> ${trackingNumber}</p>
+            <p>You can download your shipping label below:</p>
+            <p><a href="${labelUrl}" style="color: #800020;">Download Shipping Label</a></p>
+            <p>We've also attached your invoice for your records.</p>
+            <p style="margin-top: 30px;">Warm regards,<br /><strong style="color: #800020;">Burgundy Suppliers</strong></p>
+          </div>
+        `,
+        attachments: [
+          {
+            filename: "invoice.pdf",
+            path: invoicePath,
+          },
+        ],
+      };
+
+      await transporter.sendMail(mailOptions);
+      fs.unlinkSync(invoicePath); // Clean up temp file
+
+    res.json({
+        success: true,
+        message: "Shipment created and email with invoice sent.",
+        trackingNumber,
+        labelUrl,
+      });
+    });
   } catch (error) {
-    console.error("Shipment creation error:", error.response?.data || error.message);
-    res.status(500).json({ success: false, message: "Error creating shipment." });
+    console.error("Shipment/email error:", error.response?.data || error.message);
+    res.status(500).json({ success: false, message: "Error creating shipment or sending email." });
   }
 });
 
